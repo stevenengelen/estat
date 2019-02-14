@@ -1,0 +1,5 @@
+#!/bin/bash
+
+export DB_NAME='estat'
+export DB_USER='estat_user'
+export DB_PASSWORD='estat_password'

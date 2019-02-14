@@ -1,2 +1,8 @@
 *.bak_*
 *.lck
+bin
+lib
+include
+pip-selfcheck.json
+*__pycache__*
+geckodriver.log

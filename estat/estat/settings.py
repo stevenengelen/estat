@@ -25,7 +25,7 @@ SECRET_KEY = 'o8$qj89@#4@mq$_eo1vdyv(*%)l#9+(x4#1or5+wpmmqa7n9d%'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [ 'localhost' ]
 
 
 # Application definition
@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'electricity',
+    'functional_tests',
 ]
 
 MIDDLEWARE = [
@@ -78,7 +80,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': os.environ.get('DB_NAME', ''),
         'USER' : os.environ.get('DB_USER', ''),
-        'PASSWORD' : os.environ.get('DB_PASS', ''),
+        'PASSWORD' : os.environ.get('DB_PASSWORD', ''),
         'HOST' : 'localhost',
         'PORT' : '5432',
     }
@@ -122,3 +124,4 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
