@@ -1,0 +1,33 @@
+# On ubuntu
+sudo aptitude install postgresql
+sudo su - postgres
+psql
+create database estat;
+create user estat_user with password 'estat_password';
+alter user estat_user createdb;
+alter role estat_user set client_encoding to 'utf8';
+alter role estat_user set default_transaction_isolation to 'read committed';
+alter role estat_user set timezone to 'UTC';
+grant all privileges on database estat to estat_user;
+\q
+exit
+
+# In (virtualenv)/bin/postactivate - so that environment variables are
+# exported when activating the virtualenv
+export DB_NAME='estat'
+export DB_USER='estat_user'
+export DB_PASSWORD='estat_password'
+
+# In settings.py
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': os.environ.get('DB_NAME', ''),
+        'USER' : os.environ.get('DB_USER', ''),
+        'PASSWORD' : os.environ.get('DB_PASSWORD', ''),
+        'HOST' : 'localhost',
+        'PORT' : '5432',
+    }
+}
+
+# It could be that a database migration is needed.
