@@ -2,6 +2,7 @@ import os
 from datetime import datetime
 
 SCREEN_DUMP_LOCATION = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'screendumps')
+MAX_WAIT = 10
 
 class Logging(object) :
 
@@ -9,7 +10,6 @@ class Logging(object) :
     def log_when_test_fails(testclass) :
         Logging.testclass = testclass
         if Logging._test_has_failed() :
-            print('-----in Logging.log_when_test_fails() path test_has_failed()')
             if not os.path.exists(SCREEN_DUMP_LOCATION) :
                 os.makedirs(SCREEN_DUMP_LOCATION)
             for ix, handle in enumerate(Logging.testclass.browser.window_handles) :
@@ -45,3 +45,26 @@ class Logging(object) :
                 windowid = Logging.testclass._windowid,
                 timestamp = timestamp
                 )
+
+class BrowserUtilities(object) :
+
+    def wait(fn) :
+        print('in wait')
+        def modified_fn(*args, **kwargs) :
+            start_time = time.time()
+            while True :
+                try :
+                    return fn(*args, **kwargs)
+                except (AssertionError, WebDriverException) as e :
+                    if time.time() - start_time > MAX_WAIT :
+                        raise e
+                    time.sleep(0.5)
+
+    @staticmethod
+    @wait
+    def wait_for_row_in_readings_table(row_text) :
+        print('in wait for')
+        readings = test_class.browser.find_element_by_id('id_table_readings')
+        print(readings)
+        rows = readings.find_elements_by_tag_name('tr')
+        self.testclass.assertIn(row_text, [row.text for row in rows])

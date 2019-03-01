@@ -1,5 +1,27 @@
-<html>
+<!DOCTYPE html>
+<html lang = "en">
 	<head>
+		<meta charset = "utf-8">
 		<title>Electricity consumation statistics</title>
 	</head>
+	<body>
+		<input type = "date" id = "input_date" date-date-format = "DD MM YYYY">	
+		<input type = "text" id = "input_reading">
+	</body>
+		<script>
+			date = new Date();
+			month = paddWithZeroAndReturnString(date.getMonth() + 1);
+			day = paddWithZeroAndReturnString(date.getDate());
+			year = date.getFullYear();
+			document.getElementById('input_date').value = year +  '-' + month + '-' + day;
+
+			function paddWithZeroAndReturnString(number) {
+				if(number < 10) {
+					return '0' + number.toString();
+				}
+				else {
+					return number.toString();
+				}
+			}
+		</script>
 </html>
