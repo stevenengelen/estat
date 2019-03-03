@@ -46,10 +46,9 @@ class Logging(object) :
                 timestamp = timestamp
                 )
 
-class BrowserUtilities(object) :
-
-    def wait(fn) :
+def wait(fn) :
         print('in wait')
+        print(fn)
         def modified_fn(*args, **kwargs) :
             start_time = time.time()
             while True :
@@ -60,9 +59,11 @@ class BrowserUtilities(object) :
                         raise e
                     time.sleep(0.5)
 
+class BrowserUtilities(object) :
+
     @staticmethod
     @wait
-    def wait_for_row_in_readings_table(row_text) :
+    def wait_for_row_in_readings_table(test_class, row_text) :
         print('in wait for')
         readings = test_class.browser.find_element_by_id('id_table_readings')
         print(readings)

@@ -44,7 +44,8 @@ class RegisterMeterReading(StaticLiveServerTestCase) :
         input_reading.send_keys('15')
         input_reading.send_keys(Keys.ENTER)
         # he sees an entry in the table with the date of today and next to it his freshly entered reading of 15 Kwh
-        print(date_today + '15')
+        print(date_today + ' 15')
+        print(BrowserUtilities.wait_for_row_in_readings_table)
         BrowserUtilities.wait_for_row_in_readings_table(self, date_today + '15')
 
 
