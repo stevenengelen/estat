@@ -32,7 +32,7 @@ class RegisterMeterReading(StaticLiveServerTestCase) :
         self.assertIsNotNone(input_date, msg = 'no input_date')
         # he sees that the date in this edit box is the date of his computer
         today = datetime.today()
-        # this gives YYYY-MM-DD
+        # this formats the today variable to  YYYY-MM-DD
         date_today = str(today)[:10]
         self.assertEqual(date_today, input_date.get_attribute('value'), msg = 'default date is not set in date input')
 
@@ -44,10 +44,7 @@ class RegisterMeterReading(StaticLiveServerTestCase) :
         input_reading.send_keys('15')
         input_reading.send_keys(Keys.ENTER)
         # he sees an entry in the table with the date of today and next to it his freshly entered reading of 15 Kwh
-        print(date_today + ' 15')
-        print(BrowserUtilities.wait_for_row_in_readings_table)
-        BrowserUtilities.wait_for_row_in_readings_table(self, date_today + '15')
-
+        BrowserUtilities.wait_for_row_in_readings_table(self, date_today + ' 15')
 
         # alan decides to add another meter reading, this time with the date set to yesterday
         # alan decides to add another meter reading, this time with the date set to tomorrow

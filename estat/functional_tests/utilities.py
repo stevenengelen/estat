@@ -1,8 +1,22 @@
 import os
 from datetime import datetime
+import time
+from selenium.common.exceptions import WebDriverException
 
 SCREEN_DUMP_LOCATION = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'screendumps')
 MAX_WAIT = 10
+
+def wait(fn) :
+    def modified_fn(*args, **kwargs) :
+        start_time = time.time()
+        while True :
+            try :
+                return fn(*args, **kwargs)
+            except (AssertionError, WebDriverException) as e :
+                if time.time() - start_time > MAX_WAIT :
+                    raise e
+                time.sleep(0.5)
+    return modified_fn
 
 class Logging(object) :
 
@@ -46,26 +60,11 @@ class Logging(object) :
                 timestamp = timestamp
                 )
 
-def wait(fn) :
-        print('in wait')
-        print(fn)
-        def modified_fn(*args, **kwargs) :
-            start_time = time.time()
-            while True :
-                try :
-                    return fn(*args, **kwargs)
-                except (AssertionError, WebDriverException) as e :
-                    if time.time() - start_time > MAX_WAIT :
-                        raise e
-                    time.sleep(0.5)
-
 class BrowserUtilities(object) :
 
     @staticmethod
     @wait
     def wait_for_row_in_readings_table(test_class, row_text) :
-        print('in wait for')
         readings = test_class.browser.find_element_by_id('id_table_readings')
-        print(readings)
         rows = readings.find_elements_by_tag_name('tr')
-        self.testclass.assertIn(row_text, [row.text for row in rows])
+        test_class.assertIn(row_text, [row.text for row in rows])

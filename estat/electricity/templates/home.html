@@ -5,23 +5,33 @@
 		<title>Electricity consumation statistics</title>
 	</head>
 	<body>
-		<input type = "date" id = "input_date" date-date-format = "DD MM YYYY">	
-		<input type = "text" id = "input_reading">
+		<form action = "/" method = "post">
+			<input type = "date" id = "input_date" name = "input_date" date-date-format = "DD MM YYYY">	
+			<input type = "text" id = "input_reading" name = "input_reading">
+			{% csrf_token %}
+		</form>
+		<table id = "id_table_readings">
+			<caption>Electricity meter readings</caption>
+			<th>date</th><th>reading</th>
+		</table>
 	</body>
-		<script>
-			date = new Date();
-			month = paddWithZeroAndReturnString(date.getMonth() + 1);
-			day = paddWithZeroAndReturnString(date.getDate());
-			year = date.getFullYear();
-			document.getElementById('input_date').value = year +  '-' + month + '-' + day;
+	<script>
+		/*******************************************************
+		Format and put the date of today in the input_date field
+		*******************************************************/
+		date = new Date();
+		month = paddWithZeroAndReturnString(date.getMonth() + 1);
+		day = paddWithZeroAndReturnString(date.getDate());
+		year = date.getFullYear();
+		document.getElementById('input_date').value = year +  '-' + month + '-' + day;
 
-			function paddWithZeroAndReturnString(number) {
-				if(number < 10) {
-					return '0' + number.toString();
-				}
-				else {
-					return number.toString();
-				}
+		function paddWithZeroAndReturnString(number) {
+			if(number < 10) {
+				return '0' + number.toString();
 			}
-		</script>
+			else {
+				return number.toString();
+			}
+		}
+	</script>
 </html>

@@ -1,0 +1,8 @@
+# he sees an entry in the table with the date of today and next to it his freshly entered reading of 15 Kwh
+
+1. Test if POST request redirects to the home page - OK
+2. Test if invalid input redirects tot he home page
+3. Test if invalid input, a negative meter displays an error message 'The meter is not capable to display a negative electricity consumation, so a negative reading is not possible.'
+4. Test if invalid input, a negative meter reading is not saved
+* Test can save a POST request with reading + date
+* Test if all reading + date from the DB are displayed on the page
