@@ -6,7 +6,7 @@ from django.views.generic import View
 from django.http import HttpResponseRedirect
 
 # Create your views here.
-class Home(View) :
+class TaskRegisterMeterReading(View) :
     def get(self, request) :
         # print('in Home.get')
         return render(request, 'home.html')
@@ -14,6 +14,3 @@ class Home(View) :
     def post(self, request) :
         # print('in Home.post')
         return HttpResponseRedirect('/')
-
-def post_reading(request) :
-    print('in post_reading')
