@@ -15,11 +15,10 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
-from electricity.views import Home
-from electricity.views import post_reading
+from electricity.views import TaskRegisterMeterReading
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^$', Home.as_view(), name = 'home'),
-    url(r'^reading', Home.as_view(), name = 'home'),
+    url(r'^$', TaskRegisterMeterReading.as_view(), name = 'home'),
+    url(r'^reading', TaskRegisterMeterReading.as_view(), name = 'home'),
 ]
