@@ -10,6 +10,8 @@
 from electricity.forms import RegisterMeterReadingForm
 from django.test import TestCase
 from django.utils.html import escape
+from electricity.models import MeterReading
+from electricity.tests.test_models import DATE, READING
 
 class RegisterMeterReadingFormTest(TestCase) :
 
@@ -23,3 +25,11 @@ class RegisterMeterReadingFormTest(TestCase) :
 
     def test_form_validation_for_negative_readings(self) :
         pass
+
+    def test_form_saves_reading(self) :
+        form = RegisterMeterReadingForm(data = { 'date' : DATE, 'reading' : READING })
+        assert(form.is_valid())
+        meter_reading = form.save()
+        stored_meter_reading = MeterReading.objects.first()
+        self.assertEqual(str(stored_meter_reading.date), DATE, msg = 'form does not save date correctly')
+        self.assertEqual(stored_meter_reading.reading, READING, msg = 'form does not save reading correctly')

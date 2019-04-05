@@ -6,13 +6,18 @@
 	</head>
 	<body>
 		<form action = "/" method = "post">
-			<input type = "date" id = "input_date" name = "input_date" date-date-format = "DD MM YYYY">	
-			<input type = "text" id = "input_reading" name = "input_reading">
+			{{ form }}
+			<!--<input type = "date" id = "input_date" name = "input_date" date-date-format = "DD MM YYYY">	
+			<input type = "text" id = "input_reading" name = "input_reading">-->
 			{% csrf_token %}
 		</form>
 		<table id = "id_table_readings">
 			<caption>Electricity meter readings</caption>
 			<th>date</th><th>reading</th>
+			{% for meterReading in meterReadings %}
+			<td>{{ meterReading.date }}</td>
+			<td>{{ meterReading.reading }}</td>
+			{% endfor %}
 		</table>
 	</body>
 	<script>

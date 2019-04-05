@@ -9,15 +9,10 @@ class MeterReadings(object) :
     factory to MeterReading
     '''
     def new(self, date, reading) :
-        meter_reading = MeterReading()
-        meter_reading.date = date
-        meter_reading.reading = reading
-        meter_reading.save()
-        return meter_reading.pk
+        return MeterReading.objects.create(date = date, reading = reading).pk
 
     def get(self, pk) :
-        MeterReading.objects.filter(pk = pk)
-        pass
+        return MeterReading.objects.filter(pk = pk).first()
 
     def delete(self, pk) :
         pass

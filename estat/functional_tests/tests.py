@@ -44,15 +44,15 @@ class RegisterMeterReading(StaticLiveServerTestCase) :
         input_reading.send_keys('15')
         input_reading.send_keys(Keys.ENTER)
         # he sees an entry in the table with the date of today and next to it his freshly entered reading of 15 Kwh
+        today = datetime.today()
+        date_today = str(today)[:10]
         BrowserUtilities.wait_for_row_in_readings_table(self, date_today + ' 15')
         '''
         end happy path
         '''
 
         # he sees that the date in this edit box is the date of his computer
-        today = datetime.today()
         # this formats the today variable to  YYYY-MM-DD
-        date_today = str(today)[:10]
         self.assertEqual(date_today, input_date.get_attribute('value'), msg = 'default date is not set in date input')
 
 
