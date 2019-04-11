@@ -34,26 +34,32 @@ class RegisterMeterReading(StaticLiveServerTestCase) :
         # alan opens his browsers and loads the estat url
         # he sees an edit box in which he can set a date
         self.browser.get(self.live_server_url)
-        input_date = self.browser.find_element_by_id('input_date')
+        input_date = self.browser.find_element_by_id('id_date')
         self.assertIsNotNone(input_date, msg = 'no input_date input element')
         # and he sees an edit box in which he can enter a number
-        input_reading = self.browser.find_element_by_id('input_reading')
+        input_reading = self.browser.find_element_by_id('id_reading')
         self.assertIsNotNone(input_reading, msg = 'no input_reading')
 
         # alan enters his first reading, 15 Kwh
         input_reading.send_keys('15')
         input_reading.send_keys(Keys.ENTER)
         # he sees an entry in the table with the date of today and next to it his freshly entered reading of 15 Kwh
+        # nevertheless, he decides to enter a date by himself
         today = datetime.today()
         date_today = str(today)[:10]
-        BrowserUtilities.wait_for_row_in_readings_table(self, date_today + ' 15')
+        input_date.send_keys('2019-04-11')
+        # he sees a submit button and presses it
+        input_submit = self.browser.find_element_by_id('id_submit')
+        self.assertIsNotNone(input_submit, msg = 'there is no submit button')
+        input_submit.click()
+        BrowserUtilities.wait_for_row_in_readings_table(self, '2019-04-11 15.0')
         '''
         end happy path
         '''
 
         # he sees that the date in this edit box is the date of his computer
         # this formats the today variable to  YYYY-MM-DD
-        self.assertEqual(date_today, input_date.get_attribute('value'), msg = 'default date is not set in date input')
+        # self.assertEqual(date_today, input_date.get_attribute('value'), msg = 'default date is not set in date input')
 
 
         # alan decides to add another meter reading, this time with the date set to yesterday

@@ -6,17 +6,15 @@
 	</head>
 	<body>
 		<form action = "/" method = "post">
-			{{ form }}
-			<!--<input type = "date" id = "input_date" name = "input_date" date-date-format = "DD MM YYYY">	
-			<input type = "text" id = "input_reading" name = "input_reading">-->
+			{{ registerMeterReadingForm }}
 			{% csrf_token %}
+			<input type = "submit" id = "id_submit">
 		</form>
 		<table id = "id_table_readings">
 			<caption>Electricity meter readings</caption>
-			<th>date</th><th>reading</th>
+			<tr><th>date</th><th>reading</th></tr>
 			{% for meterReading in meterReadings %}
-			<td>{{ meterReading.date }}</td>
-			<td>{{ meterReading.reading }}</td>
+			<tr><td>{{ meterReading.date|date:"Y-m-d" }}</td><td>{{ meterReading.reading }}</td></tr>
 			{% endfor %}
 		</table>
 	</body>

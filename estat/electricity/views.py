@@ -23,6 +23,6 @@ class TaskRegisterMeterReading(View) :
         form = RegisterMeterReadingForm(request.POST)
         if form.is_valid() :
             form.save()
-            # return HttpResponseRedirect('/')
+            # return Htt?!?jedi=3, pResponseRedirect('/')?!? (request, template_name, *_*context=None*_*, content_type=None, status=None, using=None) ?!?jedi?!?' '
             return render(request, 'home.html', { 'registerMeterReadingForm' : RegisterMeterReadingForm(), 'meterReadings' : meter_readings })
         return render(request, 'home.html', { 'registerMeterReadingForm' : form, 'meterReadings' : meter_readings })
