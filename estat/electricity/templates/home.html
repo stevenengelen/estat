@@ -8,7 +8,7 @@
 		<form action = "/" method = "post">
 			{{ registerMeterReadingForm }}
 			{% csrf_token %}
-			<input type = "submit" id = "id_submit">
+			<br><input type = "submit" id = "id_submit">
 		</form>
 		<table id = "id_table_readings">
 			<caption>Electricity meter readings</caption>
@@ -26,7 +26,7 @@
 		month = paddWithZeroAndReturnString(date.getMonth() + 1);
 		day = paddWithZeroAndReturnString(date.getDate());
 		year = date.getFullYear();
-		document.getElementById('input_date').value = year +  '-' + month + '-' + day;
+		document.getElementById('id_date').value = year +  '-' + month + '-' + day;
 
 		function paddWithZeroAndReturnString(number) {
 			if(number < 10) {

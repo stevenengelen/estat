@@ -22,7 +22,7 @@ class HomepageTests(TestCase) :
 
     def test_homepage_shows_meter_reading_form(self) :
         response = self.client.get('/')
-        print(response.content.decode())
+        # print(response.content.decode())
         self.assertIsInstance(response.context['registerMeterReadingForm'], RegisterMeterReadingForm, msg = 'homepage does not contain an instance of RegisterMeterReadingForm')
         self.assertContains(response, 'id_date')
         self.assertContains(response, 'id_reading')

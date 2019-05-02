@@ -22,4 +22,4 @@ class MeterReading(models.Model) :
     model class for the meter reading
     '''
     date = models.DateField(verbose_name = 'Date of reading')
-    reading = models.FloatField(verbose_name = 'Meter readng')
+    reading = models.FloatField(verbose_name = 'Meter reading')

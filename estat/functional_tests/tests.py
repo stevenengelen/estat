@@ -5,7 +5,7 @@ from .utilities import Logging
 from datetime import datetime
 from selenium.webdriver.common.keys import Keys
 from .utilities import BrowserUtilities
-
+import time
 
 class RegisterMeterReading(StaticLiveServerTestCase) :
 
@@ -21,46 +21,78 @@ class RegisterMeterReading(StaticLiveServerTestCase) :
     '''----------------------------------------
     |     Use Case Register meter Reading     |
     ----------------------------------------'''
-    def test_estat_page_is_online(self) :
+    def test_page_and_elements_are_available(self) :
+        '''
+        pre conditions
+        '''
         # alan opens the web browser and enters the estat url
+        self.browser.get(self.live_server_url)
+
         # he sees by the title on his browser that it's about Electricity consumation statistics
         self.browser.get(self.live_server_url)
         self.assertIn('Electricity consumation statistics', self.browser.title, msg = 'browser title is not correct')
 
-    def test_input_reading(self) :
-        '''
-        happy path
-        '''
-        # alan opens his browsers and loads the estat url
         # he sees an edit box in which he can set a date
-        self.browser.get(self.live_server_url)
         input_date = self.browser.find_element_by_id('id_date')
         self.assertIsNotNone(input_date, msg = 'no input_date input element')
+        # he sees that the date in this edit box is the date of his computer
+        # this formats the today variable to  YYYY-MM-DD
+        today = datetime.today()
+        date_today = str(today)[:10]
+        input_date = self.browser.find_element_by_id('id_date')
+        self.assertEqual(date_today, input_date.get_attribute('value'), msg = 'default date is not set in date input')
+
         # and he sees an edit box in which he can enter a number
         input_reading = self.browser.find_element_by_id('id_reading')
         self.assertIsNotNone(input_reading, msg = 'no input_reading')
 
+    def test_register_correct_meter_reading_and_date(self) :
+        '''
+        happy path
+        '''
+        # alan opens the browser
+        self.browser.get(self.live_server_url)
+        input_date = self.browser.find_element_by_id('id_date')
+        input_reading = self.browser.find_element_by_id('id_reading')
+
         # alan enters his first reading, 15 Kwh
         input_reading.send_keys('15')
-        input_reading.send_keys(Keys.ENTER)
-        # he sees an entry in the table with the date of today and next to it his freshly entered reading of 15 Kwh
+        # he sees the date of today and next to it his freshly entered reading of 15 Kwh
         # nevertheless, he decides to enter a date by himself
-        today = datetime.today()
-        date_today = str(today)[:10]
+        # first he clears the date field
+        input_date.clear()
+        # and then he fills in his date
         input_date.send_keys('2019-04-11')
-        # he sees a submit button and presses it
+        # next, he sees a submit button and presses it
         input_submit = self.browser.find_element_by_id('id_submit')
         self.assertIsNotNone(input_submit, msg = 'there is no submit button')
         input_submit.click()
+
+        # alan now sees his entry in the table containing the readings
         BrowserUtilities.wait_for_row_in_readings_table(self, '2019-04-11 15.0')
-        '''
-        end happy path
-        '''
 
-        # he sees that the date in this edit box is the date of his computer
+    def test_register_correct_meter_reading_and_no_date(self) :
+        # alan decides to add another meter reading, this time without setting the date himself
+        # he opens the browser
+        self.browser.get(self.live_server_url)
+
+        # this time his reading is 20 Kwh
+        input_reading = self.browser.find_element_by_id('id_reading')
+        input_reading.send_keys('20')
+        # he now accidently presses enter instead of the submit button
+        input_reading.send_keys(Keys.ENTER)
+        # he now sees both readings in the readings table
         # this formats the today variable to  YYYY-MM-DD
-        # self.assertEqual(date_today, input_date.get_attribute('value'), msg = 'default date is not set in date input')
+        today = datetime.today()
+        date_today = str(today)[:10]
+        BrowserUtilities.wait_for_row_in_readings_table(self, date_today + ' 20.0')
 
 
+    def test_register_correct_meter_reading_and_date_in_the_future(self) :
         # alan decides to add another meter reading, this time with the date set to yesterday
         # alan decides to add another meter reading, this time with the date set to tomorrow
+        pass
+
+    '''--------------------------------------------
+    |     End Use Case Register meter Reading     |
+    --------------------------------------------'''
