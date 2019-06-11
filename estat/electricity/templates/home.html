@@ -5,8 +5,11 @@
 		<title>Electricity consumation statistics</title>
 	</head>
 	<body>
-		<form action = "/" method = "post">
-			{{ registerMeterReadingForm }}
+		<!-- we add novalidate because we don't want html 5 validation -->
+		<form action = "/" method = "post" novalidate>
+			<table>
+				{{ registerMeterReadingForm.as_table }}
+			</table>
 			{% csrf_token %}
 			<br><input type = "submit" id = "id_submit">
 		</form>

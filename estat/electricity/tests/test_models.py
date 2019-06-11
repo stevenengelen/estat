@@ -8,9 +8,12 @@
 from django.test import TestCase
 from electricity.models import MeterReading
 from electricity.models import MeterReadings
+from datetime import datetime
+from datetime import timedelta
 
 READING = 15.0
 DATE = '2019-03-27'
+TOMORROW = str(datetime.today() + timedelta(days = 1))[:10]
 
 class MeterReadingsTest(TestCase) :
 
@@ -47,3 +50,9 @@ class MeterReadingsTest(TestCase) :
         self.assertEqual(meter_reading.pk, meter_reading_pk, msg = 'can not get the correct pk from the db')
         self.assertEqual(str(meter_reading.date), DATE, msg = 'can not get the correct date from the db')
         self.assertEqual(meter_reading.reading, READING, msg = 'can not get the correct reading from the db')
+
+    def test_can_not_save_date_in_the_future(self) :
+        self.check_if_db_is_empty()
+
+        meter_reading = MeterReading.objects.create(date = TOMORROW, reading = READING)
+        self.assertEqual(len(MeterReading.objects.all()), 0, msg = 'database contains a reading of the future')

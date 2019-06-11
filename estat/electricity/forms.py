@@ -1,5 +1,6 @@
 from django import forms
 from .models import MeterReading
+from .utilities import Utilities
 
 class RegisterMeterReadingForm(forms.ModelForm) :
     '''
@@ -7,6 +8,15 @@ class RegisterMeterReadingForm(forms.ModelForm) :
     '''
     class Meta :
         model = MeterReading
-        fields = [ 'date', 'reading' ]
-    # input_reading = forms.FloatField(label = 'Meter reading: ', required = True, help_text = 'Enter the meter reading')
-    # input_date = forms.DateField(label = 'Date reading: ', required = True, help_text = 'Enter the date on which teh meter reading was taken')
+        # TODO date and reading should be made required
+        # or are they already because in model blank is False?
+        fields = '__all__'
+
+    error_css_class = 'error'
+    required_css_class = 'required'
+
+    def clean_date(self) :
+        date = self.cleaned_data.get('date')
+        if Utilities.date_is_in_the_future(date) :
+            raise forms.ValidationError('You can not submit a reading made in the future', code = 'future_date_not_allowed')
+        return date

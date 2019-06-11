@@ -68,3 +68,16 @@ class BrowserUtilities(object) :
         readings = test_class.browser.find_element_by_id('id_table_readings')
         rows = readings.find_elements_by_tag_name('tr')
         test_class.assertIn(row_text, [row.text for row in rows])
+
+    @staticmethod
+    @wait
+    def wait_for_row_not_in_readings_table(test_class, row_text) :
+        readings = test_class.browser.find_element_by_id('id_table_readings')
+        rows = readings.find_elements_by_tag_name('tr')
+        for row in rows :
+            test_class.assertFalse(row.text == row_text, msg = 'record must not be in readings table')
+
+    @staticmethod
+    @wait
+    def wait_for(fn) :
+        return fn()

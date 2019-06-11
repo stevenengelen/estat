@@ -2,20 +2,16 @@ from django.test import TestCase
 from unittest import skip
 from django.utils.html import escape
 from electricity.models import MeterReading
-from electricity.tests.test_models import DATE, READING
+from electricity.tests.test_models import DATE, READING, TOMORROW
 from electricity.forms import RegisterMeterReadingForm
-from datetime import date
+# from datetime import date
+from datetime import datetime
+from datetime import timedelta
 
 
 class HomepageTests(TestCase) :
     template_name = 'home.html'
 
-    '''----------------------------------------
-    |     Use Case Register meter Reading     |
-    ----------------------------------------'''
-    '''
-    happy path
-    '''
     def test_uses_homepage_template(self) :
         response = self.client.get('/')
         self.assertTemplateUsed(response, self.template_name)
@@ -63,6 +59,11 @@ class HomepageTests(TestCase) :
     @skip
     def test_POST_invalid_reading_displays_error_message(self) :
         pass
+
+    def test_POST_invalid_date_in_the_future_displays_error_message(self) :
+        response = self.client.post('/reading', data = { 'date' : TOMORROW, 'reading' : '15' } )
+        print(response.content.decode())
+        self.assertContains(response, escape('You can not submit a reading made in the future'))
 
     @skip
     def test_POST_invalid_date_displays_error_message(self) :
