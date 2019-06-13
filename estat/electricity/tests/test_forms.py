@@ -13,7 +13,7 @@ from django.utils.html import escape
 from electricity.models import MeterReading
 from electricity.tests.test_models import DATE, READING
 from datetime import datetime, timedelta
-# from django.core.exceptions import NON_FIELD_ERRORS
+from unittest import skip
 
 class RegisterMeterReadingFormTest(TestCase) :
 
@@ -40,7 +40,9 @@ class RegisterMeterReadingFormTest(TestCase) :
         date_tomorrow = str(tomorrow)[:10]
         reading_form = RegisterMeterReadingForm(data = { 'date' : date_tomorrow, 'reading' : READING })
         self.assertFalse(reading_form.is_valid())
-        self.assertIn('You can not submit a reading made in the future', reading_form.errors['date'], msg = 'form does not contain field error message: You can not submit a reading made in the future')
+        self.assertIn('You can not submit a reading made in the future', reading_form.errors['date'], msg = 'form does not contain date field error message: You can not submit a reading made in the future')
 
-    def test_form_validation_for_negative_readings(self) :
-        pass
+    def test_form_validation_rejects_negative_readings(self) :
+        reading_form = RegisterMeterReadingForm(data = { 'date' : DATE, 'reading' : -READING })
+        self.assertFalse(reading_form.is_valid())
+        self.assertIn('The meter is not capable to display a negative electricity consumation, so a negative reading is not possible', reading_form.errors['reading'], msg = 'form does not contain reading field error message: The meter is not capable to display a negative electricity consumation, so a negative reading is not possible.')

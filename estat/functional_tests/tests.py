@@ -116,8 +116,6 @@ class RegisterMeterReading(StaticLiveServerTestCase) :
         input_submit.click()
 
         # he sees an error message telling him he can not enter a date in the future
-        # BrowserUtilities.wait_for(lambda : self.browser.find_element_by_css_selector('#id_text:invalid'))
-        # BrowserUtilities.wait_for(lambda : self.browser.find_element_by_class_name('errorlist'))
         list_items = BrowserUtilities.wait_for(lambda : self.browser.find_elements_by_tag_name('li'))
         self.assertIn('You can not submit a reading made in the future', [ list_item.text for list_item in list_items ], msg = 'error message not found in field date for date in the future')
         # the reading is not seen in the meter readings table
@@ -139,7 +137,22 @@ class RegisterMeterReading(StaticLiveServerTestCase) :
     negative meter reading entered
     '''
     def test_register_negative_meter_reading_and_correct_date(self) :
-        pass
+        # alan decides to add another meter reading, this time with the date set to tomorrow
+        # he opens the browser
+        self.browser.get(self.live_server_url)
+
+        # he enters -30kW as meter reading
+        input_reading = self.browser.find_element_by_id('id_reading')
+        input_reading.send_keys('-30')
+        # he presses submit
+        input_submit = self.browser.find_element_by_id('id_submit')
+        input_submit.click()
+
+        # he sees an error message telling him he can not enter a negative reading
+        list_items = BrowserUtilities.wait_for(lambda : self.browser.find_elements_by_tag_name('li'))
+        self.assertIn('The meter is not capable to display a negative electricity consumation, so a negative reading is not possible', [ list_item.text for list_item in list_items ], msg = 'error message not found in field reading for negative reading')
+        # the reading is not seen in the meter readings table
+        BrowserUtilities.wait_for_row_not_in_readings_table(self, str(datetime.today()) + ' 30.0')
 
     '''
     wrong format meter reading entered

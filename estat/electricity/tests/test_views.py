@@ -4,10 +4,8 @@ from django.utils.html import escape
 from electricity.models import MeterReading
 from electricity.tests.test_models import DATE, READING, TOMORROW
 from electricity.forms import RegisterMeterReadingForm
-# from datetime import date
 from datetime import datetime
 from datetime import timedelta
-
 
 class HomepageTests(TestCase) :
     template_name = 'home.html'
@@ -48,27 +46,13 @@ class HomepageTests(TestCase) :
 
     @skip
     def test_POST_invalid_redirects_to_home_page(self) :
-        response = self.client.post('/reading', data = { 'date' : DATE, 'reading' : '-15' } )
+        response = self.client.post('/reading', data = { 'date' : DATE, 'reading' : -READING } )
         self.assertRedirects(response, '/')
 
-    @skip
     def test_POST_negative_reading_displays_error_message(self) :
-        response = self.client.post('/reading', data = { 'date' : DATE, 'reading' : '-15' } )
-        self.assertContains(response, escape('The meter is not capable to display a negative electricity consumation, so a negative reading is not possible.'), status_code = 302)
-
-    @skip
-    def test_POST_invalid_reading_displays_error_message(self) :
-        pass
+        response = self.client.post('/reading', data = { 'date' : DATE, 'reading' : -READING } )
+        self.assertContains(response, escape('The meter is not capable to display a negative electricity consumation, so a negative reading is not possible'))
 
     def test_POST_invalid_date_in_the_future_displays_error_message(self) :
-        response = self.client.post('/reading', data = { 'date' : TOMORROW, 'reading' : '15' } )
-        print(response.content.decode())
+        response = self.client.post('/reading', data = { 'date' : TOMORROW, 'reading' : READING } )
         self.assertContains(response, escape('You can not submit a reading made in the future'))
-
-    @skip
-    def test_POST_invalid_date_displays_error_message(self) :
-        pass
-
-    @skip
-    def test_home_page_contains_correct_html(self) :
-        pass

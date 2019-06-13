@@ -12,16 +12,14 @@ class TaskRegisterMeterReading(View) :
     def get(self, request) :
         form = RegisterMeterReadingForm()
         meter_readings = MeterReading.objects.all()
-        if meter_readings :
-            print(meter_readings.first().date)
         return render(request, 'home.html', { 'registerMeterReadingForm' : form, 'meterReadings' : meter_readings })
 
     def post(self, request) :
-        # form = RegisterMeterReadingForm()
-        # if request.method == 'POST' :
-        meter_readings = MeterReading.objects.all()
         form = RegisterMeterReadingForm(request.POST)
+        meter_readings = MeterReading.objects.all()
         if form.is_valid() :
             form.save()
+            # TODO can we do a redirect to home here?
             return render(request, 'home.html', { 'registerMeterReadingForm' : RegisterMeterReadingForm(), 'meterReadings' : meter_readings })
+        # TODO can we do a redirect to home here? No we can not, because we need the form data
         return render(request, 'home.html', { 'registerMeterReadingForm' : form, 'meterReadings' : meter_readings })

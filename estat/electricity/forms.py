@@ -20,3 +20,9 @@ class RegisterMeterReadingForm(forms.ModelForm) :
         if Utilities.date_is_in_the_future(date) :
             raise forms.ValidationError('You can not submit a reading made in the future', code = 'future_date_not_allowed')
         return date
+
+    def clean_reading(self) :
+        reading = self.cleaned_data.get('reading')
+        if reading < 0 :
+            raise forms.ValidationError('The meter is not capable to display a negative electricity consumation, so a negative reading is not possible')
+        return reading
