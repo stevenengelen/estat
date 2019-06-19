@@ -46,3 +46,8 @@ class RegisterMeterReadingFormTest(TestCase) :
         reading_form = RegisterMeterReadingForm(data = { 'date' : DATE, 'reading' : -READING })
         self.assertFalse(reading_form.is_valid())
         self.assertIn('The meter is not capable to display a negative electricity consumation, so a negative reading is not possible', reading_form.errors['reading'], msg = 'form does not contain reading field error message: The meter is not capable to display a negative electricity consumation, so a negative reading is not possible.')
+
+    def test_form_validation_requires_a_reading(self) :
+        reading_form = RegisterMeterReadingForm(data = { 'date' : DATE, 'reading' : '' })
+        self.assertFalse(reading_form.is_valid())
+        self.assertIn('Please enter a reading', reading_form.errors['reading'], msg = 'form does not contain reading field error message: Please enter a reading')

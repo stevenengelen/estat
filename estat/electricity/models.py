@@ -23,10 +23,12 @@ class MeterReading(models.Model) :
     model class for the meter reading
     '''
     date = models.DateField(verbose_name = 'Date of reading')
-    reading = models.FloatField(verbose_name = 'Meter reading')
+    reading = models.FloatField(verbose_name = 'Meter reading', blank = True)
 
     def save(self, *args, **kwargs) :
         if(Utilities.date_is_in_the_future(self.date)) :
+            return
+        if(self.reading is None) :
             return
         if(self.reading < 0) :
             return

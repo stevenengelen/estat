@@ -131,13 +131,24 @@ class RegisterMeterReading(StaticLiveServerTestCase) :
     no reading entered
     '''
     def test_register_no_reading_and_correct_date(self) :
-        pass
+        # alan enters another meter reading, but he forgets to enter the reading
+        # he opens the browser
+        self.browser.get(self.live_server_url)
+
+        # he enters no meter reading, but instantly presses submit
+        self.browser.find_element_by_id('id_submit').click()
+
+        # he sees an error message telling him he can not leave the reading blank
+        list_items = BrowserUtilities.wait_for(lambda : self.browser.find_elements_by_tag_name('li'))
+        self.assertIn('Please enter a reading', [ list_item.text for list_item in list_items ], msg = 'error message not found in field reading for no reading')
+        # the reading is not seen in the meter readings table
+        BrowserUtilities.wait_for_row_not_in_readings_table(self, str(datetime.today()) + ' ')
 
     '''
     negative meter reading entered
     '''
     def test_register_negative_meter_reading_and_correct_date(self) :
-        # alan decides to add another meter reading, this time with the date set to tomorrow
+        # alan decides to add another meter reading, this time with a negative meter reading
         # he opens the browser
         self.browser.get(self.live_server_url)
 

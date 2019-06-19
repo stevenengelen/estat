@@ -23,6 +23,8 @@ class RegisterMeterReadingForm(forms.ModelForm) :
 
     def clean_reading(self) :
         reading = self.cleaned_data.get('reading')
+        if reading is None :
+            raise forms.ValidationError('Please enter a reading')
         if reading < 0 :
             raise forms.ValidationError('The meter is not capable to display a negative electricity consumation, so a negative reading is not possible')
         return reading

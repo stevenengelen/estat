@@ -56,3 +56,7 @@ class HomepageTests(TestCase) :
     def test_POST_invalid_date_in_the_future_displays_error_message(self) :
         response = self.client.post('/reading', data = { 'date' : TOMORROW, 'reading' : READING } )
         self.assertContains(response, escape('You can not submit a reading made in the future'))
+
+    def test_POST_no_reading_displays_error_message(self) :
+        response = self.client.post('/reading', data = { 'date' : DATE, 'reading' : '' } )
+        self.assertContains(response, escape('Please enter a reading'))

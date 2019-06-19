@@ -56,7 +56,6 @@ class MeterReadingsTest(TestCase) :
         self.check_if_db_is_empty()
 
         meter_reading = MeterReading.objects.create(date = DATE, reading = -READING)
-
         self.assertEqual(len(MeterReading.objects.all()), 0, msg = 'database contains a negative reading')
 
     def test_can_not_save_date_in_the_future(self) :
@@ -64,3 +63,9 @@ class MeterReadingsTest(TestCase) :
 
         meter_reading = MeterReading.objects.create(date = TOMORROW, reading = READING)
         self.assertEqual(len(MeterReading.objects.all()), 0, msg = 'database contains a reading of the future')
+
+    def test_can_not_save_empty_reading(self) :
+        self.check_if_db_is_empty()
+
+        meter_reading = MeterReading.objects.create(date = DATE, reading = None)
+        self.assertEqual(len(MeterReading.objects.all()), 0, msg = 'database contains an empty reading')
