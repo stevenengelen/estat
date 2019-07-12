@@ -57,6 +57,8 @@ class HomepageTests(TestCase) :
         response = self.client.post('/reading', data = { 'date' : TOMORROW, 'reading' : READING } )
         self.assertContains(response, escape('You can not submit a reading made in the future'))
 
+    # A test that tests a POST with a alpha input in 'reading' is not possible, since the browser transforms e.g. 'invalid' (so a word instead of a number) as a reading to ''.
+    # To test the behaviour of this, we already have the below test.
     def test_POST_no_reading_displays_error_message(self) :
         response = self.client.post('/reading', data = { 'date' : DATE, 'reading' : '' } )
-        self.assertContains(response, escape('Please enter a reading'))
+        self.assertContains(response, escape('Please enter a numerical reading'))

@@ -14,6 +14,8 @@ from electricity.models import MeterReading
 from electricity.tests.test_models import DATE, READING
 from datetime import datetime, timedelta
 from unittest import skip
+import pdb
+from django.core.exceptions import ValidationError
 
 class RegisterMeterReadingFormTest(TestCase) :
 
@@ -50,4 +52,11 @@ class RegisterMeterReadingFormTest(TestCase) :
     def test_form_validation_requires_a_reading(self) :
         reading_form = RegisterMeterReadingForm(data = { 'date' : DATE, 'reading' : '' })
         self.assertFalse(reading_form.is_valid())
-        self.assertIn('Please enter a reading', reading_form.errors['reading'], msg = 'form does not contain reading field error message: Please enter a reading')
+        self.assertIn('Please enter a numerical reading', reading_form.errors['reading'], msg = 'form does not contain reading field error message: Please enter a reading')
+
+    def test_form_validation_rejets_not_a_number_as_reading(self) :
+        reading_form = RegisterMeterReadingForm(data = { 'date' : DATE, 'reading' : 'invalid' })
+        self.assertFalse(reading_form.is_valid())
+        # self.assertIn('Please enter a number', reading_form.errors['reading'], msg = 'form does not contain reading field error message: Please enter a number')
+        # TODO: it should contain the message from above
+        self.assertIn('Enter a number.', reading_form.errors['reading'], msg = 'form does not contain reading field error message: Please enter a number')

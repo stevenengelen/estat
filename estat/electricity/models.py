@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 from django.db import models
 from datetime import datetime, timedelta
 from .utilities import Utilities
+from math import isnan
 
 # Create your models here.
 class MeterReadings(object) :
@@ -29,6 +30,8 @@ class MeterReading(models.Model) :
         if(Utilities.date_is_in_the_future(self.date)) :
             return
         if(self.reading is None) :
+            return
+        if(isnan(self.reading)) :
             return
         if(self.reading < 0) :
             return

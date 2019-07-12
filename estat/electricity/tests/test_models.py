@@ -69,3 +69,10 @@ class MeterReadingsTest(TestCase) :
 
         meter_reading = MeterReading.objects.create(date = DATE, reading = None)
         self.assertEqual(len(MeterReading.objects.all()), 0, msg = 'database contains an empty reading')
+
+    def test_can_not_save_not_a_number_reading(self) :
+        self.check_if_db_is_empty()
+
+        meter_reading = MeterReading.objects.create(date = DATE, reading = float('nan'))
+        self.assertEqual(len(MeterReading.objects.all()), 0, msg = 'database contains an empty reading')
+

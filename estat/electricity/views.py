@@ -6,6 +6,7 @@ from django.views.generic import View
 from django.http import HttpResponseRedirect
 from electricity.forms import RegisterMeterReadingForm
 from electricity.models import MeterReading
+import pdb
 
 # Create your views here.
 class TaskRegisterMeterReading(View) :
@@ -15,6 +16,7 @@ class TaskRegisterMeterReading(View) :
         return render(request, 'home.html', { 'registerMeterReadingForm' : form, 'meterReadings' : meter_readings })
 
     def post(self, request) :
+        # pdb.set_trace()
         form = RegisterMeterReadingForm(request.POST)
         meter_readings = MeterReading.objects.all()
         if form.is_valid() :

@@ -7,6 +7,7 @@ from selenium.webdriver.common.keys import Keys
 from .utilities import BrowserUtilities
 import time
 from datetime import timedelta
+import pdb
 
 class RegisterMeterReading(StaticLiveServerTestCase) :
 
@@ -23,10 +24,10 @@ class RegisterMeterReading(StaticLiveServerTestCase) :
     |     Use Case Register meter Reading     |
     ----------------------------------------'''
 
-    '''
-    pre conditions
-    '''
     def test_page_and_elements_are_available(self) :
+        '''
+        pre conditions
+        '''
         # alan opens the web browser and enters the estat url
         self.browser.get(self.live_server_url)
 
@@ -48,10 +49,10 @@ class RegisterMeterReading(StaticLiveServerTestCase) :
         input_reading = self.browser.find_element_by_id('id_reading')
         self.assertIsNotNone(input_reading, msg = 'no input for meter reading')
 
-    '''
-    happy path
-    '''
     def test_register_correct_meter_reading_and_date(self) :
+        '''
+        happy path
+        '''
         # alan opens the browser
         self.browser.get(self.live_server_url)
         input_date = self.browser.find_element_by_id('id_date')
@@ -73,10 +74,10 @@ class RegisterMeterReading(StaticLiveServerTestCase) :
         # alan now sees his entry in the table containing the readings
         BrowserUtilities.wait_for_row_in_readings_table(self, '2019-04-11 15.0')
 
-    '''
-    no date entered
-    '''
     def test_register_correct_meter_reading_and_no_date(self) :
+        '''
+        no date entered
+        '''
         # alan decides to add another meter reading, this time without setting the date himself
         # he opens the browser
         self.browser.get(self.live_server_url)
@@ -92,10 +93,10 @@ class RegisterMeterReading(StaticLiveServerTestCase) :
         date_today = str(today)[:10]
         BrowserUtilities.wait_for_row_in_readings_table(self, date_today + ' 20.0')
 
-    '''
-    date in the future entered
-    '''
     def test_register_correct_meter_reading_and_date_in_the_future(self) :
+        '''
+        date in the future entered
+        '''
         # alan decides to add another meter reading, this time with the date set to tomorrow
         # he opens the browser
         self.browser.get(self.live_server_url)
@@ -121,16 +122,16 @@ class RegisterMeterReading(StaticLiveServerTestCase) :
         # the reading is not seen in the meter readings table
         BrowserUtilities.wait_for_row_not_in_readings_table(self, date_tomorrow + ' 30.0')
 
-    '''
-    wrong date format entered
-    '''
     def test_register_correct_meter_reading_and_wrong_date_format(self) :
+        '''
+        wrong date format entered
+        '''
         pass
 
-    '''
-    no reading entered
-    '''
     def test_register_no_reading_and_correct_date(self) :
+        '''
+        no reading entered
+        '''
         # alan enters another meter reading, but he forgets to enter the reading
         # he opens the browser
         self.browser.get(self.live_server_url)
@@ -140,14 +141,14 @@ class RegisterMeterReading(StaticLiveServerTestCase) :
 
         # he sees an error message telling him he can not leave the reading blank
         list_items = BrowserUtilities.wait_for(lambda : self.browser.find_elements_by_tag_name('li'))
-        self.assertIn('Please enter a reading', [ list_item.text for list_item in list_items ], msg = 'error message not found in field reading for no reading')
+        self.assertIn('Please enter a numerical reading', [ list_item.text for list_item in list_items ], msg = 'error message not found in field reading for no reading')
         # the reading is not seen in the meter readings table
         BrowserUtilities.wait_for_row_not_in_readings_table(self, str(datetime.today()) + ' ')
 
-    '''
-    negative meter reading entered
-    '''
     def test_register_negative_meter_reading_and_correct_date(self) :
+        '''
+        negative meter reading entered
+        '''
         # alan decides to add another meter reading, this time with a negative meter reading
         # he opens the browser
         self.browser.get(self.live_server_url)
@@ -163,26 +164,21 @@ class RegisterMeterReading(StaticLiveServerTestCase) :
         list_items = BrowserUtilities.wait_for(lambda : self.browser.find_elements_by_tag_name('li'))
         self.assertIn('The meter is not capable to display a negative electricity consumation, so a negative reading is not possible', [ list_item.text for list_item in list_items ], msg = 'error message not found in field reading for negative reading')
         # the reading is not seen in the meter readings table
-        BrowserUtilities.wait_for_row_not_in_readings_table(self, str(datetime.today()) + ' 30.0')
+        BrowserUtilities.wait_for_row_not_in_readings_table(self, str(datetime.today()) + ' -30.0')
 
-    '''
-    wrong format meter reading entered
-    '''
     def test_register_wrong_meter_reading_format_and_correct_date(self) :
-        pass
+        '''
+        wrong format meter reading entered
+        '''
+        # alan is feeling very experimental today, he decides to add another reading, but this this he is entering "hello" as meter reading
+        # he opens the browser
+        self.browser.get(self.live_server_url)
 
-    '''
-    negative meter reading entered and wrong date format entered
-    '''
-    def test_register_negative_meter_reading_and_wrong_date_format(self) :
-        pass
+        # he enters "hello" as meter reading
+        input_reading = self.browser.find_element_by_id('id_reading')
+        input_reading.send_keys('hello')
+        #he presses submit
+        self.browser.find_element_by_id('id_submit').click()
 
-    '''
-    multiple correct readings enetered
-    '''
-    def test_register_multiple_correct_readings(self) :
-        pass
-
-    '''--------------------------------------------
-    |     End Use Case Register meter Reading     |
-    --------------------------------------------'''
+        # he sees an error message telling him he needs to fill in a number in the reading field
+        list_items = BrowserUtilities.wait_for(lambda : self.browser.find_elements_by_tag_name('li'))
